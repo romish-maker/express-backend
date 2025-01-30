@@ -4,11 +4,11 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "yarn ../blogs-inc-joyme/node_modules/.bin/nodemon --inspect dist/index.js",
-    "watch": "../blogs-inc-joyme/node_modules/.bin/tsc -w",
-    "test:e2e": "../blogs-inc-joyme/node_modules/.bin/jest --runInBand \\\".e2e.test.ts$\\\"",
-    "test:int": "../blogs-inc-joyme/node_modules/.bin/jest --runInBand \\\".integration.test.ts$\\\"",
-    "test": "../blogs-inc-joyme/node_modules/.bin/jest --runInBand"
+    "dev": "yarn nodemon --inspect dist/index.js",
+    "watch": "tsc -w",
+    "test:e2e": "jest --runInBand \".e2e.test.ts$\"",
+    "test:int": "jest --runInBand \".integration.test.ts$\"",
+    "test": "jest --runInBand"
   },
   "dependencies": {
     "@types/jsonwebtoken": "^9.0.6",
