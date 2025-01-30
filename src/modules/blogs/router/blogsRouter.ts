@@ -6,7 +6,7 @@ import { blogsController } from '../composition-root/blogsCompostitionRoot'
 
 export const blogsRouter = Router()
 
-blogsRouter.get('/', blogsController.getUsers.bind(blogsController))
+blogsRouter.get('/',  blogsController.getUsers.bind(blogsController))
 blogsRouter.get('/:blogId', blogIdValidationMW, blogsController.getUser.bind(blogsController))
 blogsRouter.get('/:blogId/posts', blogIdValidationMW, blogsController.getBlogById.bind(blogsController))
 blogsRouter.post('/', authMiddleware, blogInputValidation(), blogsController.createBlog.bind(blogsController))
