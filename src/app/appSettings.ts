@@ -1,7 +1,7 @@
 import 'dotenv/config'
 
 export const AppSettings = {
-  PORT: 3003,
+  PORT: 3004,
   ACCESS_JWT_SECRET: process.env.ACCESS_JWT_SECRET,
   ACCESS_JWT_EXPIRES: '5m',
   REFRESH_JWT_SECRET: process.env.REFRESH_JWT_SECRET,

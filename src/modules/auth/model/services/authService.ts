@@ -118,8 +118,8 @@ export const authService = {
     await authCommandRepository.registerUser(newUserRegistration)
 
     try {
-      const mailInfo = await emailManager.sendRegistrationEmail(email, confirmationData.confirmationCode)
-      console.log('@> Information::mailInfo: ', mailInfo)
+      emailManager.sendRegistrationEmail(email, confirmationData.confirmationCode)
+      console.log('@> Information::mailInfo: success', )
     } catch (err) {
       console.error('@> Error::emailManager: ', err)
     }
@@ -136,12 +136,18 @@ export const authService = {
       return operationsResultService.generateResponse(ResultToRouterStatus.NOT_FOUND)
     }
 
-    const plainUser = user.toObject()
 
     const updateUserData: UserDbModel = {
-      userData: { ...plainUser.userData },
+      userData: {
+        login: user.userData.login,
+        email: user.userData.email,
+        passwordHash: user.userData.passwordHash,
+        createdAt: user.userData.createdAt,
+      },
       confirmationData: {
-        ...plainUser.confirmationData,
+        confirmationCode: user.confirmationData.confirmationCode,
+        confirmationCodeExpirationDate: user.confirmationData.confirmationCodeExpirationDate,
+        isConfirmed: user.confirmationData.isConfirmed,
         passwordRecoveryCode: uuidv4(),
         passwordRecoveryCodeExpirationDate: add(new Date(), {
           hours: 1,
@@ -184,15 +190,21 @@ export const authService = {
       }
     }
 
-    const plainUserToConfirm = userToConfirm.toObject()
     const passwordHash = await cryptService.generateHash(newPassword)
+
     const updatedUser: UserDbModel = {
       userData: {
-        ...plainUserToConfirm.userData,
-        passwordHash
+        login: userToConfirm.userData.login,
+        email: userToConfirm.userData.email,
+        createdAt: userToConfirm.userData.createdAt,
+        passwordHash,
       },
       confirmationData: {
-        ...plainUserToConfirm.confirmationData,
+        confirmationCode: userToConfirm.confirmationData.confirmationCode,
+        confirmationCodeExpirationDate: userToConfirm.confirmationData.confirmationCodeExpirationDate,
+        isConfirmed: userToConfirm.confirmationData.isConfirmed,
+        passwordRecoveryCode: userToConfirm.confirmationData.passwordRecoveryCode,
+        passwordRecoveryCodeExpirationDate: userToConfirm.confirmationData.passwordRecoveryCodeExpirationDate,
         isPasswordRecoveryConfirmed: true,
       }
     }
@@ -262,9 +274,17 @@ export const authService = {
     // }
 
     const updatedUser: UserDbModel = {
-      ...user,
+      userData: {
+        login: user.userData.login,
+        email: user.userData.email,
+        passwordHash: user.userData.passwordHash,
+        createdAt: user.userData.createdAt,
+      },
       confirmationData: {
-        ...user.confirmationData,
+        isConfirmed: user.confirmationData.isConfirmed,
+        passwordRecoveryCode: user.confirmationData.passwordRecoveryCode,
+        passwordRecoveryCodeExpirationDate: user.confirmationData.passwordRecoveryCodeExpirationDate,
+        isPasswordRecoveryConfirmed: user.confirmationData.isPasswordRecoveryConfirmed,
         confirmationCode: uuidv4(),
         confirmationCodeExpirationDate: add(new Date(), {
           hours: 1,
@@ -276,8 +296,8 @@ export const authService = {
     await authCommandRepository.updateUser({ 'userData.email': email }, updatedUser)
 
     try {
-      const mailInfo = await emailManager.resendRegistrationEmail(email, updatedUser.confirmationData.confirmationCode)
-      console.log('@> Information::mailInfo: ', mailInfo)
+      emailManager.resendRegistrationEmail(email, updatedUser.confirmationData.confirmationCode)
+      console.log('@> Information::mailInfo: success')
     } catch (err) {
       console.error('@> Error::emailManager: ', err)
     }

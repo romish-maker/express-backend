@@ -19,10 +19,12 @@ async function runDbMongoose() {
   }
 
   try {
-    await mongoose.connect(uri, { dbName })
+    await mongoose.connect(uri,{
+      dbName: AppSettings.DB_NAME,
+    })
     console.log("Pinged your deployment. You successfully connected to mongoose!")
   } catch (err) {
-    console.dir('!!! Can\'t connect to mongoose!', err)
+    console.dir('Can\'t connect to mongoose!', err)
     await mongoose.disconnect()
     console.log('Mongoose work is finished successfully')
   }
